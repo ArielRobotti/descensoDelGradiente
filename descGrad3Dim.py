@@ -10,7 +10,7 @@ f=lambda _x : np.sin(_x[0])+np.sin(_x[1])	#esta funcion va a determinar los valo
 
 for indX, ix in enumerate(x):
 	for indY, iy in enumerate(y):
-		z[indX][indY]=f([ix,iy])
+		z[indX][indY]=f([iy,ix])
 
 plt.contourf(x,y,z,300)
 plt.colorbar()
