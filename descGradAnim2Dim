@@ -1,0 +1,43 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+# dibujamos una funcion cualquiera en un grafico por ejemplo f(x)= cos(x) + cos(2x)
+resol=1000
+x=np.linspace(-7,14,resol)
+f=lambda _x: np.sin(_x)+np.cos(_x*2.4)
+
+# "Tiramos" una bolita en algun punto x  de esa grafica 
+bolita=np.random.rand(1)*12-5
+
+h=10e-4			    # h vendria a ser la diferencial (delta) de x para calcular la derivada 
+lr=.02		      # modificar para observar los efectos de un learning rate muy alto o muy bajo.	
+ya_casi=10e-3 	# para evaluar si la pendiente esta tan cerca de cero como para detener las iteraciones
+
+posicion=np.zeros([500,2])
+pasos=0
+for i in range(500):
+	deriv=(f(bolita+h)-f(bolita))/h  		#calculamos la derivada de f(x) en el punto "bolita". Es decir, 
+											#la pendiente de la recta tangente que pasa por ese punto de la curva					
+	bolita-=deriv*lr						#damos un paso (deriv*lr) hacia donde la pendiente disminuye							
+	posicion[i][0]=bolita
+	posicion[i][1]=f(bolita)
+
+	if deriv**2< ya_casi**2:				#evaluamos si ya está tan cerca de cero como "ya_casi"
+		print(f'la bolita bajó hasta la posicion {f(bolita)} en {i} pasos')
+		pasos=i
+		break	
+
+fig=plt.figure(num="bolita cayendo",edgecolor = 'black')
+ax=fig.gca()
+
+posicion=posicion[:pasos]
+def pasos(i):
+	ax.clear()
+	ax.plot(x,f(x))
+	ax.plot(posicion[i][0],posicion[i][1],'o')
+	print(posicion[i][0])
+	plt.xlim(min(x)-.5,max(x)+.5)
+	plt.ylim(min(f(x)-.5),max(f(x)+.5))
+
+ani=animation.FuncAnimation(fig,pasos,range(len(posicion)),interval=25)
+plt.show()
